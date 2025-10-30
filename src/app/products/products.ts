@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Product, ProductService } from './product.service';
+import { CartService } from '../cart/cart.service';
 
 @Component({
   selector: 'app-products',
@@ -22,7 +23,7 @@ export class Products implements OnInit {
     image: ''
   };
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService, private cartService: CartService) {}
 
   ngOnInit(): void {
     this.productService.getProducts().subscribe((list) => (this.products = list));
@@ -43,5 +44,9 @@ export class Products implements OnInit {
     this.productService.add(this.newProduct);
     this.newProduct = { title: '', description: '', price: 0, brand: '', category: '', image: '' };
     this.showAddForm = false;
+  }
+
+  addToCart(product: Product): void {
+    this.cartService.addProduct(product, 1);
   }
 }
