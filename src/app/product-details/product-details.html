@@ -9,8 +9,8 @@
 
     <div class="product-details">
         <div class="product-image-section">
-            <img [src]="mainImage || product.images?.[0] || '/assets/images/placeholder.svg'" [alt]="product.title" class="product-main-image"
-                (error)="onImgError($event)" loading="lazy">
+            <img [src]="mainImage || product.images[0] || '/assets/images/placeholder.svg'" [alt]="product.title"
+                class="product-main-image" (error)="onImgError($event)" loading="lazy">
 
             <div class="thumbs" *ngIf="product && product.images && product.images.length > 1">
                 <img *ngFor="let img of product.images" [src]="img" class="thumb" [class.active]="img === mainImage"
@@ -26,8 +26,8 @@
             </div>
 
             <div class="product-rating">
-                <span class="rating-stars">{{ '★'.repeat(Math.round(product.rating)) }}<span class="muted">{{
-                        '☆'.repeat(5 - Math.round(product.rating)) }}</span></span>
+                <span class="rating-stars">{{ getStars(product.rating) }}<span class="muted">{{
+                        getEmptyStars(product.rating) }}</span></span>
                 <span class="rating-value">{{ product.rating | number:'1.1-1' }}</span>
             </div>
 
