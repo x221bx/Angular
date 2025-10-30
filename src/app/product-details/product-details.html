@@ -2,14 +2,14 @@
     <nav class="breadcrumbs">
         <a routerLink="/products">Products</a>
         <span>/</span>
-        <a routerLink="/products">{{ product.category }}</a>
+        <a routerLink="/products" [queryParams]="{ category: product.category }">{{ product.category }}</a>
         <span>/</span>
         <span class="crumb-current">{{ product.title }}</span>
     </nav>
 
     <div class="product-details">
         <div class="product-image-section">
-            <img [src]="(mainImage || product.images[0])" [alt]="product.title" class="product-main-image"
+            <img [src]="mainImage || product.images?.[0] || '/assets/images/placeholder.svg'" [alt]="product.title" class="product-main-image"
                 (error)="onImgError($event)" loading="lazy">
 
             <div class="thumbs" *ngIf="product && product.images && product.images.length > 1">
@@ -79,31 +79,13 @@
             </div>
         </div>
     </section>
-    </div>
-
-    <section class="related" *ngIf="related.length">
-        <h3>You might also like</h3>
-        <div class="related-grid">
-            <div class="related-card" *ngFor="let p of related">
-                <img [src]="p.images[0]" alt="{{p.title}}" class="related-img" (error)="onImgError($event)">
-                <div class="related-info">
-                    <h4 class="related-title">{{ p.title }}</h4>
-                    <div class="related-price">${{ p.price }}</div>
-                    <div class="related-actions">
-                        <button class="mini-btn" (click)="addToCartProduct(p)">Add</button>
-                        <a class="mini-link" [routerLink]="['/product', p.id]">View</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 </div>
 
 <div class="product-details-container" *ngIf="loading">
     <p>Loading product...</p>
 </div>
 
-<div class="not-found" *ngIf="!product">
+<div class="not-found" *ngIf="!loading && !product">
     <h2>Product Not Found</h2>
     <p>The product you're looking for doesn't exist.</p>
     <button class="back-btn" (click)="goBack()">Back to Products</button>
