@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { DiscountPricePipe } from '../discount-price-pipe';
 import { Product, ProductService } from '../products/product.service';
 import { CartService } from '../cart/cart.service';
@@ -8,7 +9,7 @@ import { CartService } from '../cart/cart.service';
 
 @Component({
   selector: 'app-product-details',
-  imports: [CommonModule, DiscountPricePipe],
+  imports: [CommonModule, RouterModule, FormsModule, DiscountPricePipe],
   templateUrl: './product-details.html',
   styleUrl: './product-details.css',
 })
