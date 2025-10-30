@@ -1,7 +1,12 @@
 <nav class="navbar">
     <div class="nav-container">
         <h1 class="nav-title">Products App</h1>
-        <ul class="nav-links">
+
+        <button class="menu-toggle" (click)="toggleMenu()" [attr.aria-expanded]="menuOpen">
+            ☰ Menu
+        </button>
+
+        <ul class="nav-links" [class.open]="menuOpen" (click)="closeMenu()">
             <li><a routerLink="/products" routerLinkActive="active">Products</a></li>
             <li><a routerLink="/users" routerLinkActive="active">Users</a></li>
             <li><a routerLink="/todos" routerLinkActive="active">To-Do</a></li>
@@ -10,4 +15,5 @@
             <li><a routerLink="/cart" routerLinkActive="active">Cart</a></li>
         </ul>
     </div>
+    
 </nav>

@@ -9,4 +9,13 @@ import { CommonModule } from '@angular/common';
     styleUrl: './navigation.css',
 })
 export class Navigation {
+    menuOpen = false;
+
+    toggleMenu(): void {
+        this.menuOpen = !this.menuOpen;
+    }
+
+    closeMenu(): void {
+        this.menuOpen = false;
+    }
 }
