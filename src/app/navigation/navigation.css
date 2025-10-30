@@ -45,6 +45,11 @@
     font-weight: bold;
 }
 
+/* Hide hamburger on desktop by default */
+.menu-toggle {
+    display: none;
+}
+
 @media (max-width: 768px) {
     .nav-container {
         flex-direction: column;

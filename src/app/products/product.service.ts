@@ -61,9 +61,17 @@ export class ProductService {
   private loadInitial(): Product[] {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) return JSON.parse(raw) as Product[];
-    } catch {}
-    const ph = '/assets/images/placeholder.svg';
+      if (raw) {
+        const list = JSON.parse(raw) as Product[];
+        // Migrate any old external images to local product-specific assets
+        const migrated = list.map((p) => this.toLocalImageIfNeeded(p));
+        // Persist migration if any changes
+        if (JSON.stringify(list) !== JSON.stringify(migrated)) {
+          this.persist(migrated);
+        }
+        return migrated;
+      }
+    } catch { }
     return [
       {
         id: 1,
@@ -74,7 +82,7 @@ export class ProductService {
         rating: 4.69,
         brand: 'Apple',
         category: 'smartphones',
-        images: [ph],
+        images: ['/assets/images/products/iphone-9.svg'],
       },
       {
         id: 2,
@@ -86,7 +94,7 @@ export class ProductService {
         rating: 4.44,
         brand: 'Apple',
         category: 'smartphones',
-        images: [ph],
+        images: ['/assets/images/products/iphone-x.svg'],
       },
       {
         id: 3,
@@ -97,7 +105,7 @@ export class ProductService {
         rating: 4.09,
         brand: 'Samsung',
         category: 'smartphones',
-        images: [ph],
+        images: ['/assets/images/products/samsung-universe-9.svg'],
       },
       {
         id: 4,
@@ -108,7 +116,7 @@ export class ProductService {
         rating: 4.3,
         brand: 'OPPO',
         category: 'smartphones',
-        images: [ph],
+        images: ['/assets/images/products/oppo-f19.svg'],
       },
       {
         id: 5,
@@ -120,7 +128,7 @@ export class ProductService {
         rating: 4.09,
         brand: 'Huawei',
         category: 'smartphones',
-        images: [ph],
+        images: ['/assets/images/products/huawei-p30.svg'],
       },
     ];
   }
@@ -128,7 +136,21 @@ export class ProductService {
   private persist(list: Product[]): void {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-    } catch {}
+    } catch { }
+  }
+
+  private toLocalImageIfNeeded(p: Product): Product {
+    const usesExternal = p.images && p.images.some((u) => /^https?:\/\//.test(u));
+    if (!usesExternal) return p;
+    const mapById: Record<number, string> = {
+      1: '/assets/images/products/iphone-9.svg',
+      2: '/assets/images/products/iphone-x.svg',
+      3: '/assets/images/products/samsung-universe-9.svg',
+      4: '/assets/images/products/oppo-f19.svg',
+      5: '/assets/images/products/huawei-p30.svg',
+    };
+    const local = mapById[p.id] || '/assets/images/placeholder.svg';
+    return { ...p, images: [local] };
   }
 }
 

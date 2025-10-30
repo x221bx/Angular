@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+  <defs>
+    <linearGradient id="g5" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#fff7ed"/>
+      <stop offset="100%" stop-color="#ffedd5"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#g5)"/>
+  <path d="M140 260 C 220 120, 380 120, 460 260" stroke="#f59e0b" stroke-width="16" fill="none" opacity="0.25"/>
+  <text x="300" y="200" text-anchor="middle" font-family="Segoe UI, Arial" font-size="28" fill="#92400e">Huawei P30</text>
+  <text x="300" y="230" text-anchor="middle" font-family="Segoe UI, Arial" font-size="16" fill="#b45309">Huawei • Placeholder Art</text>
+</svg>
+
