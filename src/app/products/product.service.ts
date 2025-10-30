@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 export interface Product {
   id: number;
@@ -13,11 +14,16 @@ export interface Product {
   images: string[];
 }
 
-const STORAGE_KEY = 'app_products';
+const USER_ADDED_KEY = 'app_products_user';
+const API_URL = 'https://dummyjson.com/products?limit=20';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
-  private readonly productsSubject = new BehaviorSubject<Product[]>(this.loadInitial());
+  private readonly productsSubject = new BehaviorSubject<Product[]>([]);
+
+  constructor(private http: HttpClient) {
+    this.fetchFromApi();
+  }
 
   getProducts(): Observable<Product[]> {
     return this.productsSubject.asObservable();
@@ -50,107 +56,62 @@ export class ProductService {
     };
     const next = [...current, created];
     this.productsSubject.next(next);
-    this.persist(next);
+    this.persistUserAdded(created);
     return created;
   }
 
   private nextId(list: Product[]): number {
-    return (list.reduce((max, p) => Math.max(max, p.id), 0) || 0) + 1;
+    return (list.reduce((max, p) => Math.max(max, p.id), 0) || 1000) + 1;
   }
 
-  private loadInitial(): Product[] {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const list = JSON.parse(raw) as Product[];
-        // Migrate any old external images to local product-specific assets
-        const migrated = list.map((p) => this.toLocalImageIfNeeded(p));
-        // Persist migration if any changes
-        if (JSON.stringify(list) !== JSON.stringify(migrated)) {
-          this.persist(migrated);
-        }
-        return migrated;
-      }
-    } catch { }
-    return [
-      {
-        id: 1,
-        title: 'iPhone 9',
-        description: 'An apple mobile which is nothing like apple',
-        price: 549,
-        discountPercentage: 12.96,
-        rating: 4.69,
-        brand: 'Apple',
-        category: 'smartphones',
-        images: ['/assets/images/products/iphone-9.svg'],
+  private fetchFromApi(): void {
+    this.http.get<{ products: any[] }>(API_URL).subscribe({
+      next: (res) => {
+        const fetched = (res.products || []).map((raw) => this.mapApiProduct(raw));
+        const userAdded = this.loadUserAdded();
+        const merged = [...fetched, ...userAdded];
+        this.productsSubject.next(merged);
       },
-      {
-        id: 2,
-        title: 'iPhone X',
-        description:
-          'SIM-Free, Model A19211 6.5-inch Super Retina HD display with OLED technology A12 Bionic chip',
-        price: 899,
-        discountPercentage: 17.94,
-        rating: 4.44,
-        brand: 'Apple',
-        category: 'smartphones',
-        images: ['/assets/images/products/iphone-x.svg'],
+      error: (err) => {
+        console.error('Failed to fetch products from API:', err);
+        const userAdded = this.loadUserAdded();
+        this.productsSubject.next(userAdded);
       },
-      {
-        id: 3,
-        title: 'Samsung Universe 9',
-        description: "Samsung's new variant which goes beyond Galaxy to the Universe",
-        price: 1249,
-        discountPercentage: 15.46,
-        rating: 4.09,
-        brand: 'Samsung',
-        category: 'smartphones',
-        images: ['/assets/images/products/samsung-universe-9.svg'],
-      },
-      {
-        id: 4,
-        title: 'OPPOF19',
-        description: 'OPPO F19 is officially announced on April 2021.',
-        price: 280,
-        discountPercentage: 17.91,
-        rating: 4.3,
-        brand: 'OPPO',
-        category: 'smartphones',
-        images: ['/assets/images/products/oppo-f19.svg'],
-      },
-      {
-        id: 5,
-        title: 'Huawei P30',
-        description:
-          'Huawei’s re-badged P30 Pro New Edition was officially unveiled yesterday in Germany and now the device has made its way to the UK.',
-        price: 499,
-        discountPercentage: 10.58,
-        rating: 4.09,
-        brand: 'Huawei',
-        category: 'smartphones',
-        images: ['/assets/images/products/huawei-p30.svg'],
-      },
-    ];
+    });
   }
 
-  private persist(list: Product[]): void {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-    } catch { }
-  }
-
-  private toLocalImageIfNeeded(p: Product): Product {
-    const usesExternal = p.images && p.images.some((u) => /^https?:\/\//.test(u));
-    if (!usesExternal) return p;
-    const mapById: Record<number, string> = {
-      1: '/assets/images/products/iphone-9.svg',
-      2: '/assets/images/products/iphone-x.svg',
-      3: '/assets/images/products/samsung-universe-9.svg',
-      4: '/assets/images/products/oppo-f19.svg',
-      5: '/assets/images/products/huawei-p30.svg',
+  private mapApiProduct(raw: any): Product {
+    const images: string[] = Array.isArray(raw.images) && raw.images.length
+      ? raw.images
+      : (raw.thumbnail ? [raw.thumbnail] : ['/assets/images/placeholder.svg']);
+    return {
+      id: Number(raw.id),
+      title: String(raw.title ?? ''),
+      description: String(raw.description ?? ''),
+      price: Number(raw.price ?? 0),
+      discountPercentage: raw.discountPercentage != null ? Number(raw.discountPercentage) : undefined,
+      rating: Number(raw.rating ?? 0),
+      brand: String(raw.brand ?? ''),
+      category: String(raw.category ?? ''),
+      images,
     };
-    const local = mapById[p.id] || '/assets/images/placeholder.svg';
-    return { ...p, images: [local] };
+  }
+
+  private loadUserAdded(): Product[] {
+    try {
+      const raw = localStorage.getItem(USER_ADDED_KEY);
+      return raw ? (JSON.parse(raw) as Product[]) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  private persistUserAdded(p: Product): void {
+    const list = this.loadUserAdded();
+    list.push(p);
+    try {
+      localStorage.setItem(USER_ADDED_KEY, JSON.stringify(list));
+    } catch {}
   }
 }
 
