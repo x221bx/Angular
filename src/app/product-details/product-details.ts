@@ -14,6 +14,9 @@ import { CartService } from '../cart/cart.service';
 })
 export class ProductDetails implements OnInit {
   product: Product | null = null;
+  mainImage: string | null = null;
+  qty = 1;
+  added = false;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -24,6 +27,7 @@ export class ProductDetails implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.product = this.productService.getById(id) || null;
+    this.mainImage = this.product?.images?.[0] ?? null;
   }
 
   goBack(): void {
@@ -36,10 +40,22 @@ export class ProductDetails implements OnInit {
     img.src = '/assets/images/placeholder.svg';
   }
 
+  selectImage(url: string): void {
+    this.mainImage = url;
+  }
+
+  inc(): void {
+    this.qty = Math.min(99, this.qty + 1);
+  }
+
+  dec(): void {
+    this.qty = Math.max(1, this.qty - 1);
+  }
+
   addToCart(): void {
-    if (this.product) {
-      this.cartService.addProduct(this.product, 1);
-      alert('Added to cart');
-    }
+    if (!this.product) return;
+    this.cartService.addProduct(this.product, this.qty || 1);
+    this.added = true;
+    setTimeout(() => (this.added = false), 1200);
   }
 }
