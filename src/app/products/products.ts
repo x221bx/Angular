@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -17,6 +17,7 @@ export class Products implements OnInit {
   loading = true;
   error = '';
   category = '';
+  private readonly destroyRef = inject(DestroyRef);
   showAddForm = false;
   newProduct = {
     title: '',
@@ -35,12 +36,12 @@ export class Products implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe((qp) => {
+    this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((qp) => {
       this.category = qp.get('category') || '';
       this.applyData();
     });
 
-    this.productService.getProducts().pipe(takeUntilDestroyed()).subscribe({
+    this.productService.getProducts().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => this.applyData(),
       error: (err) => {
         this.loading = false;

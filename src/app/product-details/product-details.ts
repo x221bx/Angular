@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, DestroyRef, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -21,6 +21,7 @@ export class ProductDetails implements OnInit {
   added = false;
   related: Product[] = [];
   loading = true;
+  private readonly destroyRef = inject(DestroyRef);
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -29,9 +30,9 @@ export class ProductDetails implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.route.paramMap.pipe(takeUntilDestroyed()).subscribe(pm => {
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(pm => {
       const id = Number(pm.get('id'));
-      this.productService.getProducts().pipe(takeUntilDestroyed()).subscribe(list => {
+      this.productService.getProducts().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(list => {
         this.product = list.find(p => p.id === id) || null;
         this.mainImage = this.product?.images?.[0] ?? null;
         this.related = list.filter(p => p.id !== id).slice(0, 3);
@@ -73,5 +74,13 @@ export class ProductDetails implements OnInit {
     this.cartService.addProduct(p, 1);
     this.added = true;
     setTimeout(() => (this.added = false), 1200);
+  }
+
+  getStars(rating: number): string {
+    return '★'.repeat(Math.round(rating));
+  }
+
+  getEmptyStars(rating: number): string {
+    return '☆'.repeat(5 - Math.round(rating));
   }
 }
