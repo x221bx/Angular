@@ -30,8 +30,8 @@ export class Users implements OnInit {
   }
 
   loadUsers(): void {
-    // Use a relative path so it works with different base hrefs
-    this.http.get<User[]>('assets/users.json').subscribe({
+    // Use absolute assets path to work from any route
+    this.http.get<User[]>('/assets/users.json').subscribe({
       next: (data) => {
         this.users = data;
         this.filteredUsers = data;

@@ -50,7 +50,8 @@ export class Todo implements OnInit {
   }
 
   loadUsers(): void {
-    this.http.get<User[]>('assets/users.json').subscribe(data => {
+    // Use absolute path so nested routes don't break asset URL
+    this.http.get<User[]>('/assets/users.json').subscribe(data => {
       this.users = data;
     });
   }
