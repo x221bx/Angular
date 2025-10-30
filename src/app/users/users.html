@@ -1,0 +1,20 @@
+<div class="users-container">
+    <h2>Users list</h2>
+    <div class="search-container">
+        <input type="text" [(ngModel)]="searchEmail" (input)="onSearch()" placeholder="Search by email">
+        <button *ngIf="searchEmail" (click)="resetSearch()" class="reset-btn">Reset</button>
+    </div>
+    <div *ngIf="!filteredUsers.length && users.length" class="no-results">
+        No users found matching your search.
+    </div>
+    <div class="users-grid">
+        <div class="user-card" *ngFor="let user of filteredUsers">
+            <img [src]="user.profilePicture" alt="Profile Picture" class="profile-pic">
+            <h3>{{ user.username }}</h3>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Phone:</strong> {{ user.phone }}</p>
+            <p><strong>Birthdate:</strong> {{ user.birthdate }}</p>
+            <span class="role-chip" [style.background-color]="getRoleColor(user.role)">{{ user.role }}</span>
+        </div>
+    </div>
+</div>

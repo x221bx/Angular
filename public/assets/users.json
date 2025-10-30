@@ -1,0 +1,66 @@
+[
+    {
+        "username": "john_doe",
+        "email": "john.doe@example.com",
+        "phone": "+1-555-0101",
+        "birthdate": "1985-03-15",
+        "role": "admin",
+        "profilePicture": "https://randomuser.me/api/portraits/men/1.jpg"
+    },
+    {
+        "username": "sarah_smith",
+        "email": "sarah.smith@example.com",
+        "phone": "+1-555-0102",
+        "birthdate": "1992-07-22",
+        "role": "user",
+        "profilePicture": "https://randomuser.me/api/portraits/women/2.jpg"
+    },
+    {
+        "username": "mike_johnson",
+        "email": "mike.johnson@example.com",
+        "phone": "+1-555-0103",
+        "birthdate": "1988-11-08",
+        "role": "moderator",
+        "profilePicture": "https://randomuser.me/api/portraits/men/3.jpg"
+    },
+    {
+        "username": "emma_wilson",
+        "email": "emma.wilson@example.com",
+        "phone": "+1-555-0104",
+        "birthdate": "1995-01-30",
+        "role": "user",
+        "profilePicture": "https://randomuser.me/api/portraits/women/4.jpg"
+    },
+    {
+        "username": "alex_brown",
+        "email": "alex.brown@example.com",
+        "phone": "+1-555-0105",
+        "birthdate": "1990-09-12",
+        "role": "admin",
+        "profilePicture": "https://randomuser.me/api/portraits/men/5.jpg"
+    },
+    {
+        "username": "lisa_davis",
+        "email": "lisa.davis@example.com",
+        "phone": "+1-555-0106",
+        "birthdate": "1993-05-18",
+        "role": "user",
+        "profilePicture": "https://randomuser.me/api/portraits/women/6.jpg"
+    },
+    {
+        "username": "david_miller",
+        "email": "david.miller@example.com",
+        "phone": "+1-555-0107",
+        "birthdate": "1987-12-03",
+        "role": "moderator",
+        "profilePicture": "https://randomuser.me/api/portraits/men/7.jpg"
+    },
+    {
+        "username": "anna_garcia",
+        "email": "anna.garcia@example.com",
+        "phone": "+1-555-0108",
+        "birthdate": "1991-04-25",
+        "role": "user",
+        "profilePicture": "https://randomuser.me/api/portraits/women/8.jpg"
+    }
+]
