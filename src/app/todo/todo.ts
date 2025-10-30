@@ -50,7 +50,7 @@ export class Todo implements OnInit {
   }
 
   loadUsers(): void {
-    this.http.get<User[]>('/assets/users.json').subscribe(data => {
+    this.http.get<User[]>('assets/users.json').subscribe(data => {
       this.users = data;
     });
   }
