@@ -1,5 +1,33 @@
 <div class="products-container">
     <h2>Products</h2>
+
+    <button class="view-details-btn" (click)="toggleAdd()">{{ showAddForm ? 'Cancel' : 'Add Product' }}</button>
+
+    <div *ngIf="showAddForm" class="add-form" style="margin: 16px 0; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <label>Title
+                <input type="text" [(ngModel)]="newProduct.title" placeholder="Product title" />
+            </label>
+            <label>Price
+                <input type="number" [(ngModel)]="newProduct.price" placeholder="0" />
+            </label>
+            <label>Brand
+                <input type="text" [(ngModel)]="newProduct.brand" placeholder="Brand" />
+            </label>
+            <label>Category
+                <input type="text" [(ngModel)]="newProduct.category" placeholder="Category" />
+            </label>
+            <label style="grid-column: span 2;">Image URL
+                <input type="text" [(ngModel)]="newProduct.image" placeholder="https://..." />
+            </label>
+            <label style="grid-column: span 2;">Description
+                <textarea [(ngModel)]="newProduct.description" rows="3" placeholder="Description..."></textarea>
+            </label>
+        </div>
+        <div style="margin-top: 12px;">
+            <button class="view-details-btn" (click)="addProduct()">Save</button>
+        </div>
+    </div>
     <div class="products-grid">
         <div class="product-card" *ngFor="let product of products">
             <img [src]="product.images[0]" [alt]="product.title" class="product-image" (error)="onImgError($event)">
