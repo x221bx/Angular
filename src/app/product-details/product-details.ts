@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DiscountPricePipe } from '../discount-price-pipe';
 import { Product, ProductService } from '../products/product.service';
+import { CartService } from '../cart/cart.service';
 
 
 @Component({
@@ -13,7 +14,12 @@ import { Product, ProductService } from '../products/product.service';
 })
 export class ProductDetails implements OnInit {
   product: Product | null = null;
-  constructor(private route: ActivatedRoute, private router: Router, private productService: ProductService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private productService: ProductService,
+    private cartService: CartService,
+  ) { }
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -28,5 +34,12 @@ export class ProductDetails implements OnInit {
     const img = event.target as HTMLImageElement;
     img.onerror = null; // prevent loop
     img.src = '/assets/images/placeholder.svg';
+  }
+
+  addToCart(): void {
+    if (this.product) {
+      this.cartService.addProduct(this.product, 1);
+      alert('Added to cart');
+    }
   }
 }

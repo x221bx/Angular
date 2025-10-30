@@ -25,6 +25,11 @@
                     OFF</span>
             </div>
 
+            <div style="margin-top: 16px; display: flex; gap: 8px;">
+                <button class="view-details-btn" (click)="addToCart()">Add to Cart</button>
+                <button class="back-btn" (click)="goBack()">Back</button>
+            </div>
+
             <div class="product-description">
                 <h3>Description</h3>
                 <p>{{ product.description }}</p>

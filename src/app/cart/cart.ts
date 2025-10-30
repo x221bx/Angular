@@ -1,14 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { CartService, CartItem } from './cart.service';
 
-interface CartItem {
-  id: number;
-  title: string;
-  price: number;
-  image: string;
-  quantity: number;
-}
 
 @Component({
   selector: 'app-cart',
@@ -16,40 +10,32 @@ interface CartItem {
   templateUrl: './cart.html',
   styleUrl: './cart.css',
 })
-export class Cart {
-  cartItems: CartItem[] = [
-    {
-      id: 1,
-      title: "iPhone 9",
-      price: 549,
-      image: "https://picsum.photos/80/80?random=1",
-      quantity: 1
-    },
-    {
-      id: 2,
-      title: "iPhone X",
-      price: 899,
-      image: "https://picsum.photos/80/80?random=2",
-      quantity: 2
-    }
-  ];
+export class Cart implements OnInit {
+  cartItems: CartItem[] = [];
+
+  constructor(private cartService: CartService) {}
+
+  ngOnInit(): void {
+    this.cartService.getCart().subscribe((list) => (this.cartItems = list));
+  }
 
   increaseQuantity(index: number): void {
-    this.cartItems[index].quantity++;
+    const id = this.cartItems[index].id;
+    this.cartService.increase(id);
   }
 
   decreaseQuantity(index: number): void {
-    if (this.cartItems[index].quantity > 1) {
-      this.cartItems[index].quantity--;
-    }
+    const id = this.cartItems[index].id;
+    this.cartService.decrease(id);
   }
 
   removeItem(index: number): void {
-    this.cartItems.splice(index, 1);
+    const id = this.cartItems[index].id;
+    this.cartService.remove(id);
   }
 
   getTotalPrice(): number {
-    return this.cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return this.cartService.total();
   }
 
   checkout(): void {

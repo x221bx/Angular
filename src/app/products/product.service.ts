@@ -63,6 +63,7 @@ export class ProductService {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) return JSON.parse(raw) as Product[];
     } catch {}
+    const ph = '/assets/images/placeholder.svg';
     return [
       {
         id: 1,
@@ -73,7 +74,7 @@ export class ProductService {
         rating: 4.69,
         brand: 'Apple',
         category: 'smartphones',
-        images: ['https://i.dummyjson.com/data/products/1/thumbnail.jpg'],
+        images: [ph],
       },
       {
         id: 2,
@@ -85,7 +86,7 @@ export class ProductService {
         rating: 4.44,
         brand: 'Apple',
         category: 'smartphones',
-        images: ['https://i.dummyjson.com/data/products/2/thumbnail.jpg'],
+        images: [ph],
       },
       {
         id: 3,
@@ -96,7 +97,7 @@ export class ProductService {
         rating: 4.09,
         brand: 'Samsung',
         category: 'smartphones',
-        images: ['https://i.dummyjson.com/data/products/3/thumbnail.jpg'],
+        images: [ph],
       },
       {
         id: 4,
@@ -107,7 +108,7 @@ export class ProductService {
         rating: 4.3,
         brand: 'OPPO',
         category: 'smartphones',
-        images: ['https://i.dummyjson.com/data/products/4/thumbnail.jpg'],
+        images: [ph],
       },
       {
         id: 5,
@@ -119,7 +120,7 @@ export class ProductService {
         rating: 4.09,
         brand: 'Huawei',
         category: 'smartphones',
-        images: ['https://i.dummyjson.com/data/products/5/thumbnail.jpg'],
+        images: [ph],
       },
     ];
   }
