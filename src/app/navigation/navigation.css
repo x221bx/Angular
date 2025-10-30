@@ -40,7 +40,7 @@
 }
 
 .nav-links a.active {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: #ff6b35;
     font-weight: bold;
 }
 

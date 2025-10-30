@@ -22,14 +22,14 @@ export class Cart {
       id: 1,
       title: "iPhone 9",
       price: 549,
-      image: "https://i.dummyjson.com/data/products/1/thumbnail.jpg",
+      image: "https://picsum.photos/80/80?random=1",
       quantity: 1
     },
     {
       id: 2,
       title: "iPhone X",
       price: 899,
-      image: "https://i.dummyjson.com/data/products/2/thumbnail.jpg",
+      image: "https://picsum.photos/80/80?random=2",
       quantity: 2
     }
   ];
