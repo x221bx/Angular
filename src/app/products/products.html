@@ -1,0 +1,20 @@
+<div class="products-container">
+    <h2>Products</h2>
+    <div class="products-grid">
+        <div class="product-card" *ngFor="let product of products">
+            <img [src]="product.images[0]" [alt]="product.title" class="product-image" (error)="onImgError($event)">
+            <div class="product-info">
+                <h3>{{ product.title }}</h3>
+                <p class="category">{{ product.category }}</p>
+                <p class="brand">{{ product.brand }}</p>
+                <div class="rating">⭐ {{ product.rating }}</div>
+                <div class="price">
+                    <span class="original-price" *ngIf="product.discountPercentage">${{ product.price }}</span>
+                    <span class="discounted-price">${{ product.price * (1 - (product.discountPercentage || 0) / 100)
+                        }}</span>
+                </div>
+                <button class="view-details-btn" [routerLink]="['/product', product.id]">View Details</button>
+            </div>
+        </div>
+    </div>
+</div>
