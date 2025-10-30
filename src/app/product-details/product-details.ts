@@ -88,11 +88,13 @@ export class ProductDetails implements OnInit {
     this.product = this.products.find(p => p.id === id) || null;
   }
 
-  onImgError(event: Event): void {
-    (event.target as HTMLImageElement).src = 'assets/images/placeholder.svg';
-  }
-
   goBack(): void {
     this.router.navigate(['/products']);
+  }
+
+  onImgError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.onerror = null; // prevent infinite loop if placeholder fails
+    img.src = 'assets/images/placeholder.svg';
   }
 }

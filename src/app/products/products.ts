@@ -80,6 +80,8 @@ export class Products {
   ];
 
   onImgError(event: Event): void {
-    (event.target as HTMLImageElement).src = 'assets/images/placeholder.svg';
+    const img = event.target as HTMLImageElement;
+    img.onerror = null; // prevent infinite loop if placeholder fails
+    img.src = 'assets/images/placeholder.svg';
   }
 }
