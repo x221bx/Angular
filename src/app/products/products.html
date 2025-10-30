@@ -3,6 +3,10 @@
 
     <button class="view-details-btn" (click)="toggleAdd()">{{ showAddForm ? 'Cancel' : 'Add Product' }}</button>
 
+    <div *ngIf="loading" style="margin:12px 0;color:#666;">Loading products...</div>
+    <div *ngIf="!loading && !products.length" style="margin:12px 0;color:#666;">No products to show.</div>
+    <div *ngIf="error" style="color:#dc2626;">{{ error }}</div>
+
     <div *ngIf="showAddForm" class="add-form"
         style="margin: 16px 0; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
@@ -29,7 +33,7 @@
             <button class="view-details-btn" (click)="addProduct()">Save</button>
         </div>
     </div>
-    <div class="products-grid">
+    <div class="products-grid" *ngIf="!loading && products.length">
         <div class="product-card" *ngFor="let product of products">
             <img [src]="product.images[0]" [alt]="product.title" class="product-image" (error)="onImgError($event)"
                 loading="lazy">

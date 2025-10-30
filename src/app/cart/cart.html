@@ -9,7 +9,8 @@
 
         <div class="cart-items" *ngIf="cartItems.length">
             <div class="cart-item" *ngFor="let item of cartItems; let i = index">
-                <img [src]="item.image" [alt]="item.title" class="cart-item-image" (error)="onImgError($event)">
+                <img [src]="item.image" [alt]="item.title" class="cart-item-image" (error)="onImgError($event)"
+                    loading="lazy">
                 <div class="cart-item-details">
                     <h4>{{ item.title }}</h4>
                     <p class="cart-item-price">${{ item.price }}</p>

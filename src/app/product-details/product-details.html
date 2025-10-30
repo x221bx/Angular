@@ -1,4 +1,4 @@
-<div class="product-details-container" *ngIf="product">
+<div class="product-details-container" *ngIf="!loading && product">
     <nav class="breadcrumbs">
         <a routerLink="/products">Products</a>
         <span>/</span>
@@ -79,6 +79,28 @@
             </div>
         </div>
     </section>
+    </div>
+
+    <section class="related" *ngIf="related.length">
+        <h3>You might also like</h3>
+        <div class="related-grid">
+            <div class="related-card" *ngFor="let p of related">
+                <img [src]="p.images[0]" alt="{{p.title}}" class="related-img" (error)="onImgError($event)">
+                <div class="related-info">
+                    <h4 class="related-title">{{ p.title }}</h4>
+                    <div class="related-price">${{ p.price }}</div>
+                    <div class="related-actions">
+                        <button class="mini-btn" (click)="addToCartProduct(p)">Add</button>
+                        <a class="mini-link" [routerLink]="['/product', p.id]">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div class="product-details-container" *ngIf="loading">
+    <p>Loading product...</p>
 </div>
 
 <div class="not-found" *ngIf="!product">

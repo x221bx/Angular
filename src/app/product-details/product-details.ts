@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { DiscountPricePipe } from '../discount-price-pipe';
 import { Product, ProductService } from '../products/product.service';
 import { CartService } from '../cart/cart.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 
 @Component({
@@ -19,6 +20,7 @@ export class ProductDetails implements OnInit {
   qty = 1;
   added = false;
   related: Product[] = [];
+  loading = true;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -27,12 +29,13 @@ export class ProductDetails implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(pm => {
+    this.route.paramMap.pipe(takeUntilDestroyed()).subscribe(pm => {
       const id = Number(pm.get('id'));
-      this.productService.getProducts().subscribe(list => {
+      this.productService.getProducts().pipe(takeUntilDestroyed()).subscribe(list => {
         this.product = list.find(p => p.id === id) || null;
         this.mainImage = this.product?.images?.[0] ?? null;
         this.related = list.filter(p => p.id !== id).slice(0, 3);
+        this.loading = false;
       });
     });
   }

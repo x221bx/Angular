@@ -13,6 +13,8 @@ import { CartService } from '../cart/cart.service';
 })
 export class Products implements OnInit {
   products: Product[] = [];
+  loading = true;
+  error = '';
   showAddForm = false;
   newProduct = {
     title: '',
@@ -26,7 +28,18 @@ export class Products implements OnInit {
   constructor(private productService: ProductService, private cartService: CartService) {}
 
   ngOnInit(): void {
-    this.productService.getProducts().subscribe((list) => (this.products = list));
+    this.productService.getProducts().subscribe({
+      next: (list) => {
+        this.products = list;
+        this.loading = false;
+        this.error = '';
+      },
+      error: (err) => {
+        this.loading = false;
+        this.error = 'Failed to load products';
+        console.error(err);
+      }
+    });
   }
 
   onImgError(event: Event): void {
