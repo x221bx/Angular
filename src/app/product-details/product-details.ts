@@ -17,6 +17,7 @@ export class ProductDetails implements OnInit {
   mainImage: string | null = null;
   qty = 1;
   added = false;
+  related: Product[] = [];
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -28,6 +29,8 @@ export class ProductDetails implements OnInit {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.product = this.productService.getById(id) || null;
     this.mainImage = this.product?.images?.[0] ?? null;
+    const all = this.productService.getSnapshot();
+    this.related = all.filter(p => !this.product || p.id !== this.product.id).slice(0, 3);
   }
 
   goBack(): void {
@@ -55,6 +58,12 @@ export class ProductDetails implements OnInit {
   addToCart(): void {
     if (!this.product) return;
     this.cartService.addProduct(this.product, this.qty || 1);
+    this.added = true;
+    setTimeout(() => (this.added = false), 1200);
+  }
+
+  addToCartProduct(p: Product): void {
+    this.cartService.addProduct(p, 1);
     this.added = true;
     setTimeout(() => (this.added = false), 1200);
   }

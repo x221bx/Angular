@@ -2,17 +2,17 @@
     <nav class="breadcrumbs">
         <a routerLink="/products">Products</a>
         <span>/</span>
-        <a routerLink="/products" [queryParams]="{ category: product.category }">{{ product.category }}</a>
+        <a routerLink="/products">{{ product.category }}</a>
         <span>/</span>
         <span class="crumb-current">{{ product.title }}</span>
     </nav>
 
     <div class="product-details">
         <div class="product-image-section">
-            <img [src]="(mainImage || product.images[0])" [alt]="product.title" class="product-main-image" (error)="onImgError($event)"
-                loading="lazy">
+            <img [src]="(mainImage || product.images[0])" [alt]="product.title" class="product-main-image"
+                (error)="onImgError($event)" loading="lazy">
 
-            <div class="thumbs" *ngIf="product.images?.length > 1">
+            <div class="thumbs" *ngIf="product && product.images && product.images.length > 1">
                 <img *ngFor="let img of product.images" [src]="img" class="thumb" [class.active]="img === mainImage"
                     (click)="selectImage(img)" (error)="onImgError($event)" alt="thumbnail">
             </div>
@@ -26,14 +26,18 @@
             </div>
 
             <div class="product-rating">
-                <span class="rating-stars">{{ '★'.repeat(Math.round(product.rating)) }}<span class="muted">{{ '☆'.repeat(5 - Math.round(product.rating)) }}</span></span>
+                <span class="rating-stars">{{ '★'.repeat(Math.round(product.rating)) }}<span class="muted">{{
+                        '☆'.repeat(5 - Math.round(product.rating)) }}</span></span>
                 <span class="rating-value">{{ product.rating | number:'1.1-1' }}</span>
             </div>
 
             <div class="product-price">
-                <span class="original-price" *ngIf="product.discountPercentage">${{ (product.price | discountPrice:product.discountPercentage).original }}</span>
-                <span class="discounted-price">${{ (product.price | discountPrice:product.discountPercentage).discounted }}</span>
-                <span class="discount-badge" *ngIf="product.discountPercentage">-{{ product.discountPercentage }}%</span>
+                <span class="original-price" *ngIf="product.discountPercentage">${{ (product.price |
+                    discountPrice:product.discountPercentage).original }}</span>
+                <span class="discounted-price">${{ (product.price | discountPrice:product.discountPercentage).discounted
+                    }}</span>
+                <span class="discount-badge" *ngIf="product.discountPercentage">-{{ product.discountPercentage
+                    }}%</span>
             </div>
 
             <div class="qty-row">
@@ -46,7 +50,7 @@
             </div>
 
             <div class="cta-row">
-                <button class="add-btn" (click)="addToCart()">Add to Cart</button>
+                <button class="add-btn" (click)="addToCart()" [disabled]="!qty || qty < 1">Add to Cart</button>
                 <button class="secondary-btn" (click)="goBack()">Back</button>
             </div>
 
@@ -58,6 +62,23 @@
             </div>
         </div>
     </div>
+
+    <section class="related" *ngIf="related.length">
+        <h3>You might also like</h3>
+        <div class="related-grid">
+            <div class="related-card" *ngFor="let p of related">
+                <img [src]="p.images[0]" alt="{{p.title}}" class="related-img" (error)="onImgError($event)">
+                <div class="related-info">
+                    <h4 class="related-title">{{ p.title }}</h4>
+                    <div class="related-price">${{ p.price }}</div>
+                    <div class="related-actions">
+                        <button class="mini-btn" (click)="addToCartProduct(p)">Add</button>
+                        <a class="mini-link" [routerLink]="['/product', p.id]">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
 
 <div class="not-found" *ngIf="!product">
