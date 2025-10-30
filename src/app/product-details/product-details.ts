@@ -27,11 +27,14 @@ export class ProductDetails implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.product = this.productService.getById(id) || null;
-    this.mainImage = this.product?.images?.[0] ?? null;
-    const all = this.productService.getSnapshot();
-    this.related = all.filter(p => !this.product || p.id !== this.product.id).slice(0, 3);
+    this.route.paramMap.subscribe(pm => {
+      const id = Number(pm.get('id'));
+      this.productService.getProducts().subscribe(list => {
+        this.product = list.find(p => p.id === id) || null;
+        this.mainImage = this.product?.images?.[0] ?? null;
+        this.related = list.filter(p => p.id !== id).slice(0, 3);
+      });
+    });
   }
 
   goBack(): void {
