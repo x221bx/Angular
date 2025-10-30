@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Product, ProductService } from './product.service';
 import { CartService } from '../cart/cart.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-products',
@@ -15,6 +16,7 @@ export class Products implements OnInit {
   products: Product[] = [];
   loading = true;
   error = '';
+  category = '';
   showAddForm = false;
   newProduct = {
     title: '',
@@ -25,21 +27,37 @@ export class Products implements OnInit {
     image: ''
   };
 
-  constructor(private productService: ProductService, private cartService: CartService) {}
+  constructor(
+    private productService: ProductService,
+    private cartService: CartService,
+    private route: ActivatedRoute,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
-    this.productService.getProducts().subscribe({
-      next: (list) => {
-        this.products = list;
-        this.loading = false;
-        this.error = '';
-      },
+    this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe((qp) => {
+      this.category = qp.get('category') || '';
+      this.applyData();
+    });
+
+    this.productService.getProducts().pipe(takeUntilDestroyed()).subscribe({
+      next: () => this.applyData(),
       error: (err) => {
         this.loading = false;
         this.error = 'Failed to load products';
         console.error(err);
-      }
+      },
     });
+  }
+
+  private applyData(): void {
+    const all = this.productService.getSnapshot();
+    const list = this.category
+      ? all.filter((p) => (p.category || '').toLowerCase() === this.category.toLowerCase())
+      : all;
+    this.products = list;
+    this.loading = false;
+    this.error = '';
   }
 
   onImgError(event: Event): void {
@@ -61,5 +79,9 @@ export class Products implements OnInit {
 
   addToCart(product: Product): void {
     this.cartService.addProduct(product, 1);
+  }
+
+  clearFilter(): void {
+    this.router.navigate([], { relativeTo: this.route, queryParams: {}, replaceUrl: true });
   }
 }

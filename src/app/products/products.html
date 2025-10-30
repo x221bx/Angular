@@ -4,6 +4,10 @@
     <button class="view-details-btn" (click)="toggleAdd()">{{ showAddForm ? 'Cancel' : 'Add Product' }}</button>
 
     <div *ngIf="loading" style="margin:12px 0;color:#666;">Loading products...</div>
+    <div *ngIf="!loading && category" style="margin:12px 0;">
+        <span>Filtering by category: <strong>{{ category }}</strong></span>
+        <button class="add-to-cart-btn" style="margin-left:8px;" (click)="clearFilter()">Clear</button>
+    </div>
     <div *ngIf="!loading && !products.length" style="margin:12px 0;color:#666;">No products to show.</div>
     <div *ngIf="error" style="color:#dc2626;">{{ error }}</div>
 
